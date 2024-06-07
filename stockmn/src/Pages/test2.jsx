@@ -7,7 +7,6 @@ import "./All.css"
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    UserOutlined,
     GoogleOutlined,
     ProjectOutlined,
     DashboardOutlined
@@ -84,7 +83,7 @@ return(
 <div>
 
 <header className="hader">Stock Management System</header>
-<Layout>
+<Layout >
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <Menu
@@ -131,7 +130,7 @@ return(
           />
 
           <Button className="new-button" type='primary' onClick={onButtonClick} > New </Button>
-          <Input className='searchfield' placeholder="Search" />
+          {/* <Input className='searchfield' placeholder="Search" /> */}
 
         </Header>
         <Content
@@ -143,7 +142,7 @@ return(
             borderRadius: borderRadiusLG,
           }} 
         >
-          <Table columns={columns} dataSource={dataSource} scroll={{y:420}}></Table>
+          <Table columns={columns} dataSource={dataSource} scroll={{y:420}} className="custom-table-header" ></Table>
         </Content>
       </Layout>
     </Layout>

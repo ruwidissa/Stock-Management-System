@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route } from 'react-router-dom';
 import {Table} from 'antd'
-
+import { Divider } from 'antd';
 import "./All.css"
 import {
     MenuFoldOutlined,
@@ -141,6 +141,7 @@ return(
       maxWidth: 600,
     }}
   >
+     <Divider orientation="left">Product Details</Divider>
     <Form.Item
       label="Product Name"
       name="Product Name"
@@ -168,12 +169,12 @@ return(
     </Form.Item>
 
     <Form.Item
-      label="InputNumber"
-      name="InputNumber"
+      label="Item Quantity"
+      name="Item Quantity"
       rules={[
         {
           required: true,
-          message: 'Please input!',
+          message: 'Please input the quantity!',
         },
       ]}
     >
@@ -187,6 +188,98 @@ return(
     <Form.Item
       label="TextArea"
       name="TextArea"
+      rules={[
+        {
+          required: true,
+          message: 'Please input!',
+        },
+      ]}
+    >
+      <Input.TextArea />
+    </Form.Item>
+
+    <Form.Item
+      label="Mentions"
+      name="Mentions"
+      rules={[
+        {
+          required: true,
+          message: 'Please input!',
+        },
+      ]}
+    >
+      <Mentions />
+    </Form.Item>
+
+    <Form.Item
+      label="Product Type"
+      name="Product Type"
+      rules={[
+        {
+          required: true,
+          message: 'Please select the product type!',
+        },
+      ]}
+    >
+      <Select />
+    </Form.Item>
+
+    <Form.Item
+      label="Product Material"
+      name="Product Material"
+      rules={[
+        {
+          required: true,
+          message: 'Please select the Product Material!',
+        },
+      ]}
+    >
+      <Cascader />
+    </Form.Item>
+
+    <Form.Item
+      label="TreeSelect"
+      name="TreeSelect"
+      rules={[
+        {
+          required: true,
+          message: 'Please input!',
+        },
+      ]}
+    >
+      <TreeSelect />
+    </Form.Item>
+
+    <Form.Item
+      wrapperCol={{
+        offset: 6,
+        span: 16,
+      }}
+    >
+      <Button type="primary" htmlType="submit">
+        Submit
+      </Button>
+    </Form.Item>
+
+    <Divider orientation="left">Vendor Details</Divider>
+
+<div className="inputform">
+    <Form.Item
+      label="Vendor Name"
+      name="Vendor Name"
+      rules={[
+        {
+          required: true,
+          message: 'Please Enter the Product Name!',
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
+
+    <Form.Item
+      label="Vendor Address"
+      name="Vendor Address"
       rules={[
         {
           required: true,
@@ -248,43 +341,7 @@ return(
     >
       <TreeSelect />
     </Form.Item>
-
-    <Form.Item
-      label="DatePicker"
-      name="DatePicker"
-      rules={[
-        {
-          required: true,
-          message: 'Please input!',
-        },
-      ]}
-    >
-      <DatePicker />
-    </Form.Item>
-
-    <Form.Item
-      label="RangePicker"
-      name="RangePicker"
-      rules={[
-        {
-          required: true,
-          message: 'Please input!',
-        },
-      ]}
-    >
-      <RangePicker />
-    </Form.Item>
-
-    <Form.Item
-      wrapperCol={{
-        offset: 6,
-        span: 16,
-      }}
-    >
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
-    </Form.Item>
+    </div>
         </Form>
         </Content>
       </Layout>

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route } from 'react-router-dom';
 
-import {Table} from 'antd'
-import "./All.css"
+import "./Login.css"
 import { Button, Checkbox, Form, Input } from 'antd';
 function Login() {
 
     const onFinish = (values) => {
         console.log('Success:', values);
+        window.location.href = '/home'
       };
       const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
       };
 
 return(
-<div>
+<div className="login-container">
 
 <header className="hader">Stock Management System</header>
 

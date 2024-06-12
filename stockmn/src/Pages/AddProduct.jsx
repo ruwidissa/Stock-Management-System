@@ -23,8 +23,12 @@ import {
     Select,
     TreeSelect,
   } from 'antd';
-  const { Header, Sider, Content} = Layout;
+  import { Checkbox } from 'antd';
+  const { Header, Sider, Content, Footer} = Layout;
+
 function AddProduct() {
+  const [isSaleItem, setIsSaleItem] = useState(false);
+  const [isStockClearingItem, setStockClearingItem] = useState(false);
 
 const handleMenuClick = (e) => {
   if (e.key === '3') {
@@ -33,9 +37,22 @@ const handleMenuClick = (e) => {
   if (e.key === '2'){
     window.location.href = '/generatereport';
   }
+  if (e.key === '1'){
+    window.location.href = '/home'
+  }
+};
+const onChange = (e) => {
+  console.log(`checked = ${e.target.checked}`);
 };
 
-const { RangePicker } = DatePicker;
+const handleCheckboxChange = (e) => {
+  setIsSaleItem(e.target.checked);
+}
+
+const handleCheckboxChangeStock = (e) => {
+  setStockClearingItem(e.target.checked);
+}
+
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -55,6 +72,10 @@ const formItemLayout = {
   },
 };
 
+const materialOption = [
+  {value:'Cilk', label:'Silk'},
+  {value:'Cotton', label:'Cotton'}
+]
 
 const [dataSource, setDataSource] = useState([]);
 
@@ -77,7 +98,7 @@ return(
 <div>
 
 <header className="hader">Stock Management System</header>
-<Layout>
+<Layout style={{ minHeight: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <Menu
@@ -137,11 +158,10 @@ return(
         ><Form
             {...formItemLayout}
     variant="filled"
-    style={{
-      maxWidth: 600,
-    }}
+    style={{ display: 'flex', justifyContent: 'space-between' }}
   >
-     <Divider orientation="left">Product Details</Divider>
+    <div style={{ flex: 1 }}>
+     <Divider orientation="left"><h3>Product Details</h3></Divider>
     <Form.Item
       label="Product Name"
       name="Product Name"
@@ -165,50 +185,81 @@ return(
         },
       ]}
     >
-      <Input />
+      <InputNumber min={1} style={{ width: '100%' }}/>
     </Form.Item>
 
     <Form.Item
-      label="Item Quantity"
-      name="Item Quantity"
+      label="Purchasing Price"
+      name="Purchasing Price"
       rules={[
         {
           required: true,
-          message: 'Please input the quantity!',
+          message: 'Please input the Purchasing Price!',
         },
       ]}
     >
-      <InputNumber
-        style={{
-          width: '100%',
-        }}
-      />
+      <InputNumber min={1} style={{ width: '100%' }}/>
     </Form.Item>
 
     <Form.Item
-      label="TextArea"
-      name="TextArea"
+      label="Selling Percentage (%)"
+      name="Selling Percentage"
       rules={[
         {
           required: true,
-          message: 'Please input!',
+          message: 'Please input the Selling Percentage!',
         },
       ]}
     >
-      <Input.TextArea />
+       <InputNumber
+                    min={0}
+                    max={100}
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}
+                    style={{ width: '100%' }}
+                    disabled = {isSaleItem || isStockClearingItem}
+                  />
+    </Form.Item>
+
+    <Form.Item label="Is this is a sale item">
+    <Checkbox onChange={handleCheckboxChange} disabled= {isStockClearingItem}>Yes</Checkbox>
     </Form.Item>
 
     <Form.Item
-      label="Mentions"
-      name="Mentions"
+      label="Sale Percentage (%)"
+      name="Sale Percentage"
       rules={[
         {
-          required: true,
-          message: 'Please input!',
+          required: false,
+          message: 'Please input the Sale Percentage!',
         },
       ]}
     >
-      <Mentions />
+       <InputNumber
+                    min={0}
+                    max={100}
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}
+                    style={{ width: '100%' }}
+                    disabled={!isSaleItem || isStockClearingItem}
+                  />
+    </Form.Item>
+
+    <Form.Item label="Is this is a stock clearing item">
+    <Checkbox onChange={handleCheckboxChangeStock} disabled={isSaleItem}>Yes</Checkbox>
+    </Form.Item>
+
+    <Form.Item
+      label="Stock Clearing Price"
+      name="Stock Clearing Price"
+      rules={[
+        {
+          required: false,
+          message: 'Please enter the Stock Clearing Price!',
+        },
+      ]}
+    >
+       <InputNumber disabled={!isStockClearingItem} style={{ width: '100%' }} />
     </Form.Item>
 
     <Form.Item
@@ -221,7 +272,7 @@ return(
         },
       ]}
     >
-      <Select />
+      <Select options={materialOption} />
     </Form.Item>
 
     <Form.Item
@@ -237,18 +288,8 @@ return(
       <Cascader />
     </Form.Item>
 
-    <Form.Item
-      label="TreeSelect"
-      name="TreeSelect"
-      rules={[
-        {
-          required: true,
-          message: 'Please input!',
-        },
-      ]}
-    >
-      <TreeSelect />
-    </Form.Item>
+  
+   
 
     <Form.Item
       wrapperCol={{
@@ -259,11 +300,17 @@ return(
       <Button type="primary" htmlType="submit">
         Submit
       </Button>
+      <Link to= "/home" >
+      <Button type="primary" >
+        Cancel
+      </Button>
+      </Link>
     </Form.Item>
+    </div>
 
-    <Divider orientation="left">Vendor Details</Divider>
+    <div style={{ flex: 1, marginLeft: '24px' }}>
+    <Divider orientation="left"><h3>Vendor Details</h3></Divider>
 
-<div className="inputform">
     <Form.Item
       label="Vendor Name"
       name="Vendor Name"
@@ -343,6 +390,9 @@ return(
     </Form.Item>
     </div>
         </Form>
+        <Footer style={{ textAlign: 'center' }}>
+          Ruwin ©{new Date().getFullYear()} Created by Ruwin Dissanayake
+        </Footer>
         </Content>
       </Layout>
     </Layout>

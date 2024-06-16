@@ -12,38 +12,47 @@ import {
     DashboardOutlined
   } from '@ant-design/icons';
   import { Button, Layout, Menu, theme } from 'antd';
-  const { Header, Sider, Content} = Layout;
+  const { Header, Sider, Content, Footer} = Layout;
+  const { Search } = Input;
 function Hom() {
+  const onSearch = (value, _e, info) => console.log(info?.source, value);
+const BackendURL = 'http://localhost:8080/api/user/getData';
 const [columns, setColumns] = useState([
 {
     title: "Product ID",
-    dataIndex: "id",
-    width: '8%'
+    dataIndex: "product_id",
+    width: '15%'
 },
 {
  title: "Product Name",
- dataIndex: "quote" ,
+ dataIndex: "product_name" ,
  width: '17%'
 },
 {
   title: "On Hand Qty",
-  dataIndex: "author"
+  dataIndex: "quantity"
 },
 {
   title: "Vendor",
-  dataIndex: "author"
+  dataIndex: "vendor_name"
 },
 {
   title: "Buying Price",
-  dataIndex: "author"
+  dataIndex: "buying_price"
 },
 {
   title: "Product Category",
-  dataIndex: "author"
+  dataIndex: "material_name"
 },
 {
   title: "Selling Price",
-  dataIndex: "author"
+  dataIndex: "selling_price"
+},
+{
+  title: 'Action',
+  dataIndex: '',
+  key: 'x',
+  render: () => <a>Delete</a>,
 },
 
 ]);
@@ -62,16 +71,41 @@ const onButtonClick = (e) => {
 }
 
 
+
+
+
+
+
+
+
+
 const [dataSource, setDataSource] = useState([]);
+const [loading, setLoading] = useState(true);
 
 useEffect(() => {
+  const fetchData = async () => {
+      try {
+          const response = await fetch(BackendURL);
+          const result = await response.json();
+          setDataSource(result);
+          setLoading(false);
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      }
+  };
 
-fetch('https://dummyjson.com/quotes')
-.then(res => res.json())
-.then((result) => {
-  setDataSource(result.quotes)
+  fetchData();
+}, []);
 
-});})
+
+
+
+
+
+
+
+
+
 
 const [collapsed, setCollapsed] = useState(true);
 const {
@@ -83,7 +117,7 @@ return(
 <div>
 
 <header className="hader">Stock Management System</header>
-<Layout >
+<Layout style={{ minHeight: '100vh' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <Menu
@@ -112,12 +146,14 @@ return(
         />
       </Sider>
       <Layout className="layout">
+      
         <Header
           style={{
             padding: 0,
             background: colorBgContainer,
           }}
         >
+          <Search className="search" placeholder="input search text" onSearch={onSearch} style={{width: 100,}} enterButton />
           <Button className="button"
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -142,7 +178,12 @@ return(
             borderRadius: borderRadiusLG,
           }} 
         >
-          <Table columns={columns} dataSource={dataSource} scroll={{y:420}} className="custom-table-header" ></Table>
+          
+          <Table loading={loading} columns={columns} dataSource={dataSource} scroll={{y:420}} className="custom-table-header" ></Table>
+
+          <Footer style={{ textAlign: 'center' }}>
+          Ruwin ©{new Date().getFullYear()} Created by Ruwin Dissanayake
+        </Footer>
         </Content>
       </Layout>
     </Layout>

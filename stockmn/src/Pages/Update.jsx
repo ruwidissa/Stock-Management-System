@@ -1,127 +1,455 @@
-import React, { useState } from 'react';
-import { Table, Button, Form, Input, Modal } from 'antd';
-
-const Update = () => {
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-  ]);
-
-  const [editing, setEditing] = useState(false);
-  const [editingRecord, setEditingRecord] = useState(null);
-
+import React, { useEffect, useState } from "react";
+import { Link, Route } from 'react-router-dom';
+import {Table} from 'antd'
+import { Divider } from 'antd';
+import { useParams } from "react-router-dom";
+import "./All.css"
+import {
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    GoogleOutlined,
+    ProjectOutlined,
+    DashboardOutlined
+  } from '@ant-design/icons';
+  import { Layout, Menu, theme } from 'antd';
+  import {
+    Button,
+    Form,
+    Input,
+    InputNumber,
+    Select,
+    Typography
+  } from 'antd';
+  import { Checkbox } from 'antd';
+  const { Header, Sider, Content, Footer} = Layout;
+  const { Text } = Typography;
+  
+  const BackendURL = 'http://localhost:8080/api/user/saveData';
+function Update() {
+  const [isSaleItem, setIsSaleItem] = useState(false);
+  const [isStockClearingItem, setStockClearingItem] = useState(false);
+  const { product_id } = useParams();
   const [form] = Form.useForm();
 
-  const handleEdit = (record) => {
-    setEditing(true);
-    setEditingRecord(record);
-    form.setFieldsValue(record);
-  };
 
-  const handleDelete = (key) => {
-    setDataSource(dataSource.filter((item) => item.key !== key));
-  };
-
-  const handleSave = async () => {
-    try {
-      const values = await form.validateFields();
-      setDataSource((prev) =>
-        prev.map((item) => (item.key === editingRecord.key ? { ...item, ...values } : item))
-      );
-      setEditing(false);
-      setEditingRecord(null);
-    } catch (errorInfo) {
-      console.log('Validate Failed:', errorInfo);
-    }
-  };
-
-  const handleCancel = () => {
-    setEditing(false);
-    setEditingRecord(null);
-  };
-
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Action',
-      dataIndex: '',
-      key: 'x',
-      render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => handleEdit(record)}>
-            Edit
-          </Button>
-          <Button type="link" onClick={() => handleDelete(record.key)}>
-            Delete
-          </Button>
-        </>
-      ),
-    },
-  ];
-
-  return (
-    <>
-      <Table dataSource={dataSource} columns={columns} />
-      <Modal
-        visible={editing}
-        title="Edit Record"
-        okText="Save"
-        onCancel={handleCancel}
-        onOk={handleSave}
-      >
-        <Form form={form} layout="vertical" name="form_in_modal">
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please input the name!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="age"
-            label="Age"
-            rules={[{ required: true, message: 'Please input the age!' }]}
-          >
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item
-            name="address"
-            label="Address"
-            rules={[{ required: true, message: 'Please input the address!' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
-  );
+const handleMenuClick = (e) => {
+  if (e.key === '3') {
+    window.location.href = 'https://www.google.com';
+  }
+  if (e.key === '2'){
+    window.location.href = '/generatereport';
+  }
+  if (e.key === '1'){
+    window.location.href = '/home'
+  }
+};
+const onChange = (e) => {
+  console.log(`checked = ${e.target.checked}`);
 };
 
+const handleCheckboxChange = (e) => {
+  setIsSaleItem(e.target.checked);
+}
+
+const handleCheckboxChangeStock = (e) => {
+  setStockClearingItem(e.target.checked);
+}
+
+const formItemLayout = {
+  labelCol: {
+    xs: {
+      span: 24,
+    },
+    sm: {
+      span: 6,
+    },
+  },
+  wrapperCol: {
+    xs: {
+      span: 24,
+    },
+    sm: {
+      span: 14,
+    },
+  },
+};
+
+const productType = [
+  {value:'T-Shirt', label:'T-Shirt'},
+  {value:'Shirt', label:'Shirt'},
+  {value:'Trouser', label:'Trouser'},
+  {value:'Blouse', label:'Blouse'},
+  {value:'Skirt', label:'Skirt'},
+  {value:'Skinny', label:'Skinny'},
+  {value:'Legging', label:'Legging'}
+]
+
+const materialType = [
+  {value:'Silk', label:'Silk'},
+  {value:'Cotton', label:'Cotton'},
+  {value:'Polyester', label:'Polyester'}
+]
+
+const vendorType = [
+  {value:'Internal', label:'Internal'},
+  {value:'External', label:'External'}
+]
+
+
+const [collapsed, setCollapsed] = useState(true);
+const {
+  token: { colorBgContainer, borderRadiusLG },
+} = theme.useToken();
+
+const initialValues = {
+  "Vendor Name": "Internal Vendor",
+  "Vendor Address": "Internal Address"
+};
+
+const handleSelectChange = (value) => {
+  setFormData({ ...formData, material_name: value });
+};
+const handleSelectChangeVendor = (value) => {
+  setFormData({ ...formData, vendor_name: value });
+};
+
+
+const [formData, setFormData] = useState({
+  dataField: '',
+  firstLetter: '',
+  secondLetter: '',
+  product_id: product_id,
+});
+
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
+};
+console.log(formData);
+const handleSubmit = async () => {
+  const response = await fetch(BackendURL,{
+    method:'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  });
+  window.location.href = '/home'
+};
+
+const [dataSource, setDataSource] = useState([]);
+useEffect (() => {
+  const retrieveData = async () =>{
+    try{
+      const response = await fetch(`http://localhost:8080/api/user/getDataId/${product_id}`)
+      const result = await response.json();
+      setDataSource(result);
+      console.log(result);
+      form.setFieldsValue(result); 
+    } catch (error) {
+      console.error('Error retreiving data', error);
+    }
+  };
+  retrieveData();
+
+},[]);
+
+
+
+
+return(
+<div>
+
+<header className="hader">Stock Management System</header>
+<Layout style={{ minHeight: '100vh' }}>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="demo-logo-vertical" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['0']}
+          onClick={handleMenuClick}
+          items={[
+            {
+              key: '1',
+              icon: <DashboardOutlined />,
+              label: 'Dashboard',
+            },
+            {
+              key: '2',
+              icon: <ProjectOutlined />,
+              label: 'Generate Report',
+            },
+            {
+              key: '3',
+              icon: <GoogleOutlined />,
+              label: 'Google Search',
+              
+            },
+          ]}
+        />
+      </Sider>
+      <Layout className="layout">
+        <Header
+          style={{
+            padding: 0,
+            background: colorBgContainer,
+          }}
+        >
+          <Button className="button"
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              fontSize: '16px',
+              width: 64,
+              height: 64,
+            }}
+          />
+        <Link to= "/addproduct" >  
+          <Button className="new-button" type='primary' > New </Button>
+          </Link>
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            minHeight: 280,
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+          }} 
+        ><Form
+            {...formItemLayout} form={form} initialValues={{ product_id }}
+    variant="filled"
+    style={{ display: 'flex', justifyContent: 'space-between' }}
+    
+  >
+    <div style={{ flex: 1 }}>
+     <Divider orientation="left"><h3>Product Details</h3></Divider>
+    <Form.Item
+      label="Product Name"
+      name="product_name"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: true,
+          message: 'Please Enter the Product Name!',
+        },
+      ]}
+    >
+      <Input name="product_name"/>
+    </Form.Item>
+
+    <Form.Item
+      label="Item Quantity"
+      name="quantity"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: true,
+          message: 'Please Enter the Item Quantity!',
+        },
+      ]}
+    >
+      <InputNumber name="quantity" min={1} style={{ width: '100%' }}/>
+    </Form.Item>
+
+    <Form.Item
+      label="Purchasing Price"
+      name="buying_price"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: true,
+          message: 'Please input the Purchasing Price!',
+        },
+      ]}
+    >
+      <InputNumber name="buying_price" min={1} style={{ width: '100%' }}/>
+    </Form.Item>
+
+    <Form.Item
+      label="Selling Percentage (%)"
+      name="selling_percentage"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: false,
+          message: 'Please input the Selling Percentage!',
+        },
+      ]}
+    >
+       <InputNumber
+                    name="selling_percentage"
+                    min={0}
+                    max={100}
+                    // formatter={value => `${value}%`}
+                    // parser={value => value.replace('%', '')}
+                    style={{ width: '100%' }}
+                    disabled = {isSaleItem || isStockClearingItem}
+                  />
+    </Form.Item>
+
+    <Form.Item name="sale_item" label="Is this is a sale item">
+    <Checkbox  onChange={handleCheckboxChange} disabled= {isStockClearingItem}>Yes</Checkbox>
+    </Form.Item>
+
+    <Form.Item
+      label="Sale Percentage (%)"
+      name="sale_percentage"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: false,
+          message: 'Please input the Sale Percentage!',
+        },
+      ]}
+    >
+       <InputNumber
+       name="sale_percentage"
+                    min={0}
+                    max={100}
+                    // formatter={value => `${value}%`}
+                    // parser={value => value.replace('%', '')}
+                    style={{ width: '100%' }}
+                    disabled={!isSaleItem || isStockClearingItem}
+                  />
+    </Form.Item>
+
+    <Form.Item label="Is this is a stock clearing item">
+    <Checkbox onChange={handleCheckboxChangeStock} disabled={isSaleItem}>Yes</Checkbox>
+    </Form.Item>
+
+    <Form.Item
+      label="Stock Clearing Price"
+      name="stock_clearing_price"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: false,
+          message: 'Please enter the Stock Clearing Price!',
+        },
+      ]}
+    >
+       <InputNumber name="stock_clearing_price" disabled={!isStockClearingItem} style={{ width: '100%' }} />
+    </Form.Item>
+
+    <Form.Item
+      label="Product Type"
+      name="material_name"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: true,
+          message: 'Please select the product type!',
+        },
+      ]}
+    >
+      <Select name="material_name" options={productType} onChange={handleSelectChange} />
+    </Form.Item>
+
+    <Form.Item
+      label="Material Type"
+      name="material_type"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: true,
+          message: 'Please select the Product Material!',
+        },
+      ]}
+    >
+      <Select name="material_type" options={materialType} />
+    </Form.Item>
+
+    <Form.Item
+      wrapperCol={{
+        offset: 6,
+        span: 16,
+      }}
+    >
+      <Button type="primary" htmlType="submit" onClick={ handleSubmit } className="button-spacing">
+        Submit
+      </Button>
+      <Link to= "/home" >
+      <Button type="primary" >
+        Cancel
+      </Button>
+      </Link>
+    </Form.Item>
+    </div>
+
+    <div style={{ flex: 1, marginLeft: '24px' }}>
+    <Divider orientation="left"><h3>Vendor Details</h3></Divider>
+
+    <Form.Item
+      label="Vendor Type"
+      name="vendorType"
+      rules={[
+        {
+          required: false,
+
+        },
+      ]}
+    >
+      <Select name="vendorType" options={vendorType} onChange={handleSelectChangeVendor} />
+    </Form.Item>
+
+    <Form.Item
+      label="Vendor Name"
+      name="vendor_name"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: false,
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
+
+    <Form.Item
+      label="Vendor Address"
+      name="vendorAddress"
+      onChange={handleInputChange}
+      rules={[
+        {
+          required: false,
+        },
+      ]}
+    >
+      <Input.TextArea />
+    </Form.Item>
+
+    <Form.Item
+          label="Product ID"
+          name="product_id"
+
+          // onChange={handleInputChange}
+          hidden
+          rules={[
+            {
+              required: false,
+              message: 'Product ID is required!',
+            },
+          ]}
+        >
+          <Input name="product_id" value={product_id} />
+          
+        </Form.Item>
+    
+    </div>
+        </Form>
+        <Footer style={{ textAlign: 'center' }}>
+          Ruwin ©{new Date().getFullYear()} Created by Ruwin Dissanayake
+        </Footer>
+        </Content>
+      </Layout>
+    </Layout>
+</div>  
+
+);
+}
+
+
 export default Update;
-
-
-

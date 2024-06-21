@@ -25,7 +25,7 @@ import {
   
   const BackendURL = 'http://localhost:8080/api/user/saveData';
 function AddProduct() {
-  const [isSaleItem, setIsSaleItem] = useState(false);
+  const [isSaleItem, setIsSaleItem] = useState(0);
   const [isStockClearingItem, setStockClearingItem] = useState(false);
 
 const handleMenuClick = (e) => {
@@ -44,8 +44,9 @@ const onChange = (e) => {
 };
 
 const handleCheckboxChange = (e) => {
+  setFormData({ ...formData, sale_item: e.target.checked ? 1 : 0 });
   setIsSaleItem(e.target.checked);
-}
+};
 
 const handleCheckboxChangeStock = (e) => {
   setStockClearingItem(e.target.checked);
@@ -123,6 +124,7 @@ const [formData, setFormData] = useState({
   firstLetter: '',
   secondLetter: '',
   product_id: {timestamp},
+  sale_item: 0,
 });
 
 const handleInputChange = (e) => {
@@ -148,6 +150,7 @@ const handleSubmit = async () => {
     body: JSON.stringify(formData)
   });
   window.location.href = '/addproduct'
+  console.log(formData)
 };
 
 
@@ -287,7 +290,7 @@ return(
                   />
     </Form.Item>
 
-    <Form.Item name="sale_item" label="Is this is a sale item">
+    <Form.Item name="sale_item" label="Is this is a sale item" valuePropName="checked">
     <Checkbox  onChange={handleCheckboxChange} disabled= {isStockClearingItem}>Yes</Checkbox>
     </Form.Item>
 
@@ -318,9 +321,10 @@ return(
     </Form.Item>
 
     <Form.Item
-      label="Stock Clearing Price"
-      name="stock_clearing_price"
+      label="Final Selling Price"
+      name="selling_price"
       onChange={handleInputChange}
+      hidden={!isStockClearingItem}
       rules={[
         {
           required: false,
@@ -328,7 +332,7 @@ return(
         },
       ]}
     >
-       <InputNumber name="stock_clearing_price" disabled={!isStockClearingItem} style={{ width: '100%' }} />
+       <InputNumber name="selling_price" hidden={!isStockClearingItem} style={{ width: '100%' }} />
     </Form.Item>
 
     <Form.Item
@@ -454,10 +458,11 @@ return(
     
     </div>
         </Form>
+
+        </Content>
         <Footer style={{ textAlign: 'center' }}>
           Ruwin ©{new Date().getFullYear()} Created by Ruwin Dissanayake
         </Footer>
-        </Content>
       </Layout>
     </Layout>
 </div>  

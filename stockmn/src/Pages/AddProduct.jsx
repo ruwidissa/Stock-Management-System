@@ -1,26 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, Route } from 'react-router-dom';
-import {Table} from 'antd'
+import { Link } from 'react-router-dom';
 import { Divider } from 'antd';
 import "./All.css"
-import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    GoogleOutlined,
-    ProjectOutlined,
-    DashboardOutlined
-  } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, GoogleOutlined, ProjectOutlined, DashboardOutlined} from '@ant-design/icons';
   import { Layout, Menu, theme } from 'antd';
-  import {
-    Button,
-    Form,
-    Input,
-    InputNumber,
-    Select,
-    Typography
-  } from 'antd';
-  import { Checkbox } from 'antd';
-  const { Header, Sider, Content, Footer} = Layout;
+  import {Button, Form, Input, InputNumber, Select, Typography, Checkbox} from 'antd';
+
+  const { Header, Sider, Content, Footer} = Layout; // Destructuring Layout components from antd
   const { Text } = Typography;
   
   const BackendURL = 'http://localhost:8080/api/user/saveData';
@@ -28,6 +14,7 @@ function AddProduct() {
   const [isSaleItem, setIsSaleItem] = useState(0);
   const [isStockClearingItem, setStockClearingItem] = useState(false);
 
+  // Function to handle menu item clicks
 const handleMenuClick = (e) => {
   if (e.key === '3') {
     window.location.href = 'https://www.google.com';
@@ -43,15 +30,18 @@ const onChange = (e) => {
   console.log(`checked = ${e.target.checked}`);
 };
 
+// Function to handle checkbox change for sale item
 const handleCheckboxChange = (e) => {
   setFormData({ ...formData, sale_item: e.target.checked ? 1 : 0 });
   setIsSaleItem(e.target.checked);
 };
 
 const handleCheckboxChangeStock = (e) => {
+  setFormData({ ...formData, stock_clearing_item: e.target.checked ? 1 : 0 });
   setStockClearingItem(e.target.checked);
 }
 
+ // Layout settings for form items
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -71,6 +61,7 @@ const formItemLayout = {
   },
 };
 
+ // Options for product type select input
 const productType = [
   {value:'T-Shirt', label:'T-Shirt'},
   {value:'Shirt', label:'Shirt'},
@@ -92,10 +83,10 @@ const vendorType = [
   {value:'External', label:'External'}
 ]
 
-
 const [collapsed, setCollapsed] = useState(true);
-const {
-  token: { colorBgContainer, borderRadiusLG },
+
+  // Accessing theme tokens for styling
+const {token: { colorBgContainer, borderRadiusLG },
 } = theme.useToken();
 
 const initialValues = {
@@ -103,43 +94,46 @@ const initialValues = {
   "Vendor Address": "Internal Address"
 };
 
+ // Function to handle material name select change
 const handleSelectChange = (value) => {
   setFormData({ ...formData, material_name: value });
 };
+// Function to handle material type select change
 const handleSelectChangeType = (value) => {
-  const secondLetter = value.charAt(0).toUpperCase();
+  const secondLetter = value.substring(0,3).toUpperCase();
   setFormData({ ...formData, material_type: value, secondLetter});
 };
+// Function to handle vendor type select change
 const handleSelectChangeVendor = (value) => {
-  setFormData({ ...formData, vendor_name: value });
+  setFormData({ ...formData, vendor_type: value });
 };
-
-
-
+// Generating a timestamp for product ID
 const timestamp = Date.now();
 console.log(timestamp);
 
+  // State for form data
 const [formData, setFormData] = useState({
   dataField: '',
   firstLetter: '',
   secondLetter: '',
   product_id: {timestamp},
   sale_item: 0,
+  stock_clearing_item: 0,
 });
 
+// Function to handle input change for form fields
 const handleInputChange = (e) => {
   const { name, value } = e.target;
   setFormData({ ...formData, [name]: value });
 };
 
+  // Function to handle input change for product name and generate a product ID
 const handleInputChangeName = (e) => {
   const { name, value } = e.target;
-  const firstLetter = value.charAt(0).toUpperCase();
-
+  const firstLetter = value.substring(0,3 ).toUpperCase();
   const product_id = `${firstLetter}${timestamp}`;
       setFormData({ ...formData, [name]: value, firstLetter, product_id });
 };
-
 
 const handleSubmit = async () => {
   const response = await fetch(BackendURL,{
@@ -152,11 +146,6 @@ const handleSubmit = async () => {
   window.location.href = '/addproduct'
   console.log(formData)
 };
-
-
-
-
-
 
 return(
 <div>
@@ -221,6 +210,7 @@ return(
           }} 
         ><Form
             {...formItemLayout}
+            onFinish={handleSubmit}
     variant="filled"
     style={{ display: 'flex', justifyContent: 'space-between' }}
     
@@ -234,6 +224,10 @@ return(
         {
           required: true,
           message: 'Please Enter the Product Name!',
+        },
+        {
+          min: 3,
+          message: 'Product Name must be at least 3 characters long!',
         },
       ]}
     >
@@ -283,8 +277,6 @@ return(
                     name="selling_percentage"
                     min={0}
                     max={100}
-                    // formatter={value => `${value}%`}
-                    // parser={value => value.replace('%', '')}
                     style={{ width: '100%' }}
                     disabled = {isSaleItem || isStockClearingItem}
                   />
@@ -309,30 +301,28 @@ return(
        name="sale_percentage"
                     min={0}
                     max={100}
-                    // formatter={value => `${value}%`}
-                    // parser={value => value.replace('%', '')}
                     style={{ width: '100%' }}
                     disabled={!isSaleItem || isStockClearingItem}
                   />
     </Form.Item>
 
-    <Form.Item label="Is this is a stock clearing item">
+    <Form.Item name="stock_clearing_item" label="Is this is a stock clearing item" valuePropName="checked">
     <Checkbox onChange={handleCheckboxChangeStock} disabled={isSaleItem}>Yes</Checkbox>
     </Form.Item>
 
     <Form.Item
       label="Final Selling Price"
-      name="selling_price"
+      name="stock_clearing_price"
       onChange={handleInputChange}
       hidden={!isStockClearingItem}
       rules={[
         {
           required: false,
-          message: 'Please enter the Stock Clearing Price!',
+          message: 'Please enter the Final Selling Price!',
         },
       ]}
     >
-       <InputNumber name="selling_price" hidden={!isStockClearingItem} style={{ width: '100%' }} />
+       <InputNumber name="stock_clearing_price" hidden={!isStockClearingItem} style={{ width: '100%' }} />
     </Form.Item>
 
     <Form.Item
@@ -342,7 +332,7 @@ return(
       rules={[
         {
           required: true,
-          message: 'Please select the product type!',
+          message: 'Please select the Product type!',
         },
       ]}
     >
@@ -355,7 +345,7 @@ return(
       rules={[
         {
           required: true,
-          message: 'Please select the Product Material!',
+          message: 'Please select the Material type!',
         },
       ]}
     >
@@ -368,7 +358,7 @@ return(
         span: 16,
       }}
     >
-      <Button type="primary" htmlType="submit" onClick={handleSubmit} className="button-spacing">
+      <Button type="primary" htmlType="submit" onFinish={handleSubmit} className="button-spacing">
         Submit
       </Button>
       <Link to= "/home" >
@@ -384,7 +374,7 @@ return(
 
     <Form.Item
       label="Vendor Type"
-      name="vendorType"
+      name="vendor_type"
       rules={[
         {
           required: false,
@@ -392,39 +382,35 @@ return(
         },
       ]}
     >
-      <Select name="vendorType" options={vendorType} onChange={handleSelectChangeVendor} />
+      <Select name="vendor_type" options={vendorType} onChange={handleSelectChangeVendor} />
     </Form.Item>
 
     <Form.Item
       label="Vendor Name"
       name="vendor_name"
+      onChange={handleInputChange}
       rules={[
         {
-          required: false,
+          required: true,
+          message: 'Please enter the vendor name!',
         },
       ]}
     >
-      <Input />
+      <Input name="vendor_name" onChange={handleInputChange}/>
     </Form.Item>
 
     <Form.Item
       label="Vendor Address"
-      name="vendorAddress"
+      name="vendor_address"
+      onChange={handleInputChange}
       rules={[
         {
           required: false,
         },
       ]}
     >
-      <Input.TextArea />
+      <Input.TextArea name="vendor_address" onChange={handleInputChange} />
     </Form.Item>
-
-    {/* <Form.Item label="Product ID" name="product_id" onChange={handleInputChange}>
-      
-      
-        {timestamp}{formData.firstLetter}{formData.secondLetter}
-      
-    </Form.Item> */}
 
     <Form.Item
           label="Product ID"
@@ -434,27 +420,11 @@ return(
           rules={[
             {
               required: false,
-              message: 'Product ID is required!',
             },
           ]}
         >
           <Input name="product_id" value={formData.product_id} onChange={handleInputChange} hid />
         </Form.Item>
-
-    {/* <Form.Item
-      label="Item Code"
-      name="Item Code"
-      rules={[
-        {
-          required: true,
-
-        },
-      ]}
-    >
-      <Mentions disabled/>
-    </Form.Item> */}
-
-  
     
     </div>
         </Form>

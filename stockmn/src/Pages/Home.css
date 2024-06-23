@@ -11,14 +11,25 @@
   button{
     position: absolute;
     top: 50%;
-    left: -43%; 
+    left: -33%; 
     transform: translate(-50%, -50%); 
   }
 
 .new-button{
   background-color: rgb(39, 27, 100);
   top: 25%;
-  left: -40%;
+  left: -33%;
+}
+
+.export-button-excel{
+  background-color: rgb(55, 40, 130);
+  top: 25%;
+  left: -28%;
+}
+.export-button-pdf{
+  background-color: rgb(55, 40, 130);
+  top: 25%;
+  left: -27%;
 }
 
 .searchfield{
@@ -29,10 +40,12 @@ width: 50px;
 .loginform{
   width: 100%;
   max-width: 400px;
+
 }
 
 .inputform{
   left: 20px
+  
 }
 
 .custom-table-header .ant-table-thead > tr > th {
@@ -48,6 +61,7 @@ body, html {
 
 .button-spacing {
   margin-right: 10px;
+  
 }
 
 .search{

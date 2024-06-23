@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route } from 'react-router-dom';
-import {Table} from 'antd'
-import { Divider } from 'antd';
-import "./All.css"
 import {MenuFoldOutlined, MenuUnfoldOutlined, GoogleOutlined, ProjectOutlined, DashboardOutlined,StockOutlined, ArrowDownOutlined, ArrowUpOutlined} from '@ant-design/icons';
-  import { Layout, Menu, theme } from 'antd';
-  import { Card } from 'antd';
-  import { Button} from 'antd';
-  import { Col, Row, Statistic } from 'antd';
+import { Col, Row, Statistic, Button, Card, Layout, Menu, theme } from 'antd';
 import CountUp from 'react-countup';
 import { Flex, Progress } from 'antd';
 import { Space, Tag } from 'antd';
+import "./All.css"
+
   const { Header, Sider, Content, Footer} = Layout;
   const formatter = (value) => <CountUp end={value} separator="," />;
   const BackendURLQuantity = 'http://localhost:8080/api/user/totalQuantity';
@@ -18,6 +14,7 @@ import { Space, Tag } from 'antd';
   const BackendURLSaleItemPercentage = 'http://localhost:8080/api/user/getSalePercentage';
   const BackendURLStockItemPercentage = 'http://localhost:8080/api/user/getStockPercentage';
 
+  // Function to handle button click and redirect to the add product page
     const onButtonClick = (e) => {
       window.location.href = '/addproduct';
     }
@@ -54,18 +51,17 @@ const formItemLayout = {
     },
   },
 };
-const [dataSource1, setDataSource1] = useState([]);
-const [dataSource2, setDataSource2] = useState([]);
-const [dataSourceSaleItem, setDataSourceSaleItem] = useState([]);
-const [dataSourceStockItem, setDataSourceStockItem] = useState([]);
+// State variables to store data fetched from the backend
+const [dataSource1, setDataSource1] = useState([]);  // State for total quantity of items
+const [dataSource2, setDataSource2] = useState([]);  // State for total price of items
+const [dataSourceSaleItem, setDataSourceSaleItem] = useState([]);  // State for sale items percentage
+const [dataSourceStockItem, setDataSourceStockItem] = useState([]);  // State for stock items percentage
 const [collapsed, setCollapsed] = useState(true);
 const {
   token: { colorBgContainer, borderRadiusLG },
 } = theme.useToken();
 
-
-
-
+  // Fetch total quantity data on component mount
 useEffect(() => {
   const fetchData1 = async () => {
       try {
@@ -80,6 +76,7 @@ useEffect(() => {
   fetchData1();
 }, []);
 
+  // Fetch total price data on component mount
 useEffect(() => {
   const fetchData2 = async () => {
     try{
@@ -93,6 +90,7 @@ useEffect(() => {
   fetchData2();
 }, []);
 
+ // Fetch sale item percentage data on component mount
 useEffect(() => {
   const fetchDataSalePercentage = async () => {
     try{
@@ -106,6 +104,7 @@ useEffect(() => {
   fetchDataSalePercentage();
 }, []);
 
+// Fetch stock item percentage data on component mount
 useEffect(() => {
   const fetchDataStockPercentage = async () => {
     try{
@@ -118,13 +117,6 @@ useEffect(() => {
   };
   fetchDataStockPercentage();
 }, []);
-
-
-
-
-
-
-
 
 return(
 <div>
@@ -188,10 +180,6 @@ return(
           }} 
         >
 
-
-
-
-
 <Row gutter={16}>
     <Col span={12}>
       <Card bordered={false}>
@@ -228,9 +216,7 @@ return(
     </Col>
   </Row>
 
-
-
-<Card title="Card" size="small">
+<Card title="Stock Details" size="small">
 <Row gutter={16}>
     <Col span={12}>
       <Statistic title="Total No. of Items available in the Stock" value={dataSource1} formatter={formatter} />
@@ -245,11 +231,6 @@ return(
 <Progress type="circle" percent={50} status="exception" />
 <Progress type="circle" percent={dataSourceSaleItem * 100} />
 </Flex> */}
-
-
-
-
-
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           Ruwin ©{new Date().getFullYear()} Created by Ruwin Dissanayake
@@ -257,7 +238,6 @@ return(
       </Layout>
     </Layout>
 </div>  
-
 );
 }
 

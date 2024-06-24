@@ -25,5 +25,4 @@ Make sure to have the docker-compose.yml file on the machine. Then, start the se
 docker-compose up
 
 ### Directory structure should be like this.
-`
-`
+

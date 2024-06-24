@@ -22,5 +22,5 @@ Follow the steps below to set up and run the application on your local machine.
 
 ### 4. Run Docker Compose
 Make sure to have the docker-compose.yml file on the machine. Then, start the services using Docker Compose.
-docker-compose up
-
+`docker-compose up
+`

@@ -8,7 +8,7 @@ Follow the steps below to set up and run the application on your local machine.
 
 ### 1. Clone the Repository
 
-### 2. Savee the Docker Images
+### 2. Save the Docker Images
 
 `docker save -o stockmnback.tar ghcr.io/ruwidissa/stock-management-system/stockmnback:latest `
 `docker save -o stockmnfront.dev.tar ghcr.io/ruwidissa/stock-management-system/stockmnfront.dev:latest `

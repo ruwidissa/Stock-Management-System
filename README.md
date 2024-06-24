@@ -25,7 +25,7 @@ Make sure to have the docker-compose.yml file on the machine. Then, start the se
 docker-compose up
 
 ### Directory structure should be like this.
-stock-management-system/
+`stock-management-system/
 │
 ├── backend/
 │ ├── Dockerfile-backend
@@ -37,3 +37,4 @@ stock-management-system/
 │
 ├── docker-compose.yml
 └── README.md
+`

@@ -25,16 +25,5 @@ Make sure to have the docker-compose.yml file on the machine. Then, start the se
 docker-compose up
 
 ### Directory structure should be like this.
-`stock-management-system/
-│
-├── backend/
-│ ├── Dockerfile-backend
-│ └── ... (Java Spring Boot application files)
-│
-├── frontend/
-│ ├── Dockerfile-frontend
-│ └── ... (React application files)
-│
-├── docker-compose.yml
-└── README.md
+`
 `

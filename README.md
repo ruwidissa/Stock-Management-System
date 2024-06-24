@@ -28,12 +28,12 @@ docker-compose up
 stock-management-system/
 │
 ├── backend/
-│   ├── Dockerfile-backend
-│   └── ... (Java Spring Boot application files)
+│ ├── Dockerfile-backend
+│ └── ... (Java Spring Boot application files)
 │
 ├── frontend/
-│   ├── Dockerfile-frontend
-│   └── ... (React application files)
+│ ├── Dockerfile-frontend
+│ └── ... (React application files)
 │
 ├── docker-compose.yml
 └── README.md
